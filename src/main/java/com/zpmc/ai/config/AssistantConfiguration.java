@@ -1,0 +1,44 @@
+package com.zpmc.ai.config;
+
+import com.zpmc.ai.listener.MyChatModelListener;
+import com.zpmc.ai.service.Assistant;
+import com.zpmc.ai.service.StreamingAssistant;
+import com.zpmc.ai.web.AiController;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.StreamingChatModel;
+import dev.langchain4j.model.chat.listener.ChatModelListener;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
+
+/**
+ *
+ * @author songqiang
+ * @date 2025-11-20 10:34
+ */
+
+@Configuration
+public class AssistantConfiguration {
+    /**
+     * This chat memory will be used by {@link Assistant} and {@link StreamingAssistant}
+     */
+    @Bean
+    @Scope(SCOPE_PROTOTYPE)
+    ChatMemory chatMemory() {
+        return MessageWindowChatMemory.withMaxMessages(10);
+    }
+
+    /**
+     * This listener will be injected into every {@link ChatModel} and {@link StreamingChatModel}
+     * bean   found in the application context.
+     * It will listen for {@link ChatModel} in the {@link AiController} as well as
+     * {@link Assistant} and {@link StreamingAssistant}.
+     */
+    @Bean
+    ChatModelListener chatModelListener() {
+        return new MyChatModelListener();
+    }
+}

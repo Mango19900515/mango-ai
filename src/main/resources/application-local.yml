@@ -1,0 +1,46 @@
+langchain4j:
+  community:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+  open-ai:
+    chat-model:
+      # qianwen
+      api-key: sk-a5a14aa75445458fbc4223ed6f5d577e
+      model-name: qwen-plus
+      log-requests: true
+      log-responses: true
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      timeout: 60000
+    #      response-format: json_object
+    streaming-chat-model:
+      api-key: sk-a5a14aa75445458fbc4223ed6f5d577e
+      model-name: qwen-plus
+      log-requests: true
+      log-responses: true
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      timeout: 60000
+
+#logging:
+#  level:
+#    dev:
+#      langchain4j: debug
+management:
+  tracing:
+    sampling:
+      probability: 1
+spring:
+  data:
+    redis:
+      port: 6379
+      host: 127.0.0.1
+      password: zpmc123
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+bigmodel:
+  api-key: 3159a924f85140d7b5b4f787172325f9.iiCqXjXxSBm06cWz
