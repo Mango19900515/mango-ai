@@ -9,17 +9,10 @@
 
 
 
-大家好，我是程序员鱼皮。现在 AI 应用开发可以说是程序员必备的技能了，求职时能够大幅增加竞争力。之前我用 Spring AI 带大家做过一个 [开源的 AI 超级智能体项目](https://github.com/liyupi/yu-ai-agent)，这次我来带大家快速掌握另一个主流的 Java AI 应用开发框架 LangChain4j。
+大家好，我是程序员Mango。现在 AI 应用开发可以说是程序员必备的技能了，求职时能够大幅增加竞争力。c此次我来带大家快速掌握另一个主流的 Java AI 应用开发框架 LangChain4j。
 
-这个教程项目也是我精心设计，拒绝枯燥的理论，而是用一个编程小助手项目带大家在实战中依次学习 LangChain4j 的主流用法。看完这个教程，你不仅学会了 LangChain4j，还直接多了一段项目经历，岂不美哉？
 
-项目视频教程：https://bilibili.com/video/BV1X4GGziEyr
-
-文字教程：https://mp.weixin.qq.com/s/7cNh7ndeiWiHBjnkTkz_Zg （在公众号程序员鱼皮的文章）
-
-更多鱼皮原创项目教程、编程学习路线可以在 [编程导航学习网](https://www.codefather.cn/) 获取。
-
-⭐ 如果这个项目对您有帮助，请给鱼皮一个 Star，这会激励我继续爆肝输出更多干货教程，万分感谢！
+⭐ 如果这个项目对您有帮助，请给Mango一个 Star，这会激励我继续爆肝输出更多干货教程，万分感谢！
 
 ![](https://pic.yupi.icu/1/AI%E7%BC%96%E7%A8%8B%E5%B0%8F%E5%8A%A9%E6%89%8B%E9%A1%B9%E7%9B%AE.png)
 
@@ -65,33 +58,52 @@
 
 #### 1. 后端启动
 ```bash
-# 克隆项目
-git clone <repository-url>
-cd ai-code-helper
 
-# 配置API密钥
-# 编辑 src/main/resources/application.yml
-# 填入您的通义千问 API 和 Big Model API 密钥
+[//]: # (# 克隆项目)
 
-# 启动后端服务
-mvn spring-boot:run
-```
+[//]: # (git clone <repository-url>)
 
-#### 2. 前端启动
-```bash
-# 进入前端目录
-cd ai-code-helper-frontend
+[//]: # (cd ai-code-helper)
 
-# 安装依赖
-npm install
+[//]: # ()
+[//]: # (# 配置API密钥)
 
-# 启动开发服务器
-npm run dev
+[//]: # (# 编辑 src/main/resources/application.yml)
+
+[//]: # (# 填入您的通义千问 API 和 Big Model API 密钥)
+
+[//]: # ()
+[//]: # (# 启动后端服务)
+
+[//]: # (mvn spring-boot:run)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (#### 2. 前端启动)
+
+[//]: # (```bash)
+
+[//]: # (# 进入前端目录)
+
+[//]: # (cd ai-code-helper-frontend)
+
+[//]: # ()
+[//]: # (# 安装依赖)
+
+[//]: # (npm install)
+
+[//]: # ()
+[//]: # (# 启动开发服务器)
+
+[//]: # (npm run dev)
 ```
 
 #### 3. 访问应用
-- 前端地址: `http://localhost:5173`
-- 后端API: `http://localhost:8081/api`
+
+[//]: # (- 前端地址: `http://localhost:5173`)
+
+[//]: # (- 后端API: `http://localhost:8081/api`)
 
 
 
@@ -141,4 +153,5 @@ npm run dev
 - [阿里云通义千问](https://dashscope.aliyun.com/) - 优秀的大语言模型
 - [Spring Boot](https://spring.io/projects/spring-boot) - 简化的Java开发框架
 - [Vue.js](https://vuejs.org/) - 渐进式JavaScript框架
+- 本文参考鱼皮的项目学习建议，感谢鱼皮的宝贵经验分享。
 
