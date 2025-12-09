@@ -1,0 +1,77 @@
+### 一、视图基础信息
+1. 视图名称：V_DWM_QC_MT_CYCLE
+2. 视图核心字段及含义（必填，避免歧义）：
+   | C_YEAR  | 年 |
+   | C_MONTH  | 月 |
+   | C_WEEK  | 周 |
+   | C_YEAR_MONTH_DAY  | 天 |
+   | C_YEAR_MONTH_DAY_HOUR  | 小时 |
+   | VES_CODE  | 航次 |
+   | QC_NAME  | 岸桥 |
+   | END_TIME  | 搜索时间 |
+### 二、核心诉求
+基于上述视图，计算【N个核心业务指标】，并输出可直接执行的SQL语句，要求明确筛选条件、分组逻辑、返回值格式。
+
+### 三、指标计算规则
+| 指标名称 | 指标定义 | 计算公式 | 口径约束 |
+|----------|----------|----------|----------|
+| 岸桥数 | 有作业的岸桥设备数量 | COUNT(DISTINCT QC_ID)  |  |
+| 装卸船作业量(钩) | 装卸船作业的循环数 | SUM(L_D_S_MOVE)  |  |
+| 装卸船作业量(Unit) | 装卸船作业的集装箱量 | SUM(L_D_S_UNIT)  |  |
+| 装卸船作业量(TEU) | 装卸船作业的标准箱量 | SUM(L_D_S_TEU)  |  |
+| 舱盖板作业量 | 舱盖板作业的循环数 | SUM(HATCHCOVER_HOOK)  |  |
+| 翻箱作业量 | 翻箱作业的循环数 | SUM(SHOB_HOOK)  |  |
+| 其他作业量 | 翻箱作业的循环数 | SUM(OTHER_HOOK)  |  |
+| 总作业小时 (h) | 总的作业小时数 | ROUND(SUM(CYCLE_DURATION)/3600.00,2)  |  |
+| 总效率(钩 /h) | 平均每小时完成的装卸船钩数 | ROUND((CASE WHEN ROUND(SUM(CYCLE_DURATION)/3600.00,2) > 0 THEN SUM(L_D_S_MOVE)/ROUND(SUM(CYCLE_DURATION)/3600.00,2) ELSE 0 END ),2) |  |
+| 总效率(unit/h) | 平均每小时完成的集装箱量 | ROUND((CASE WHEN ROUND(SUM(CYCLE_DURATION)/3600.00,2) > 0 THEN SUM(L_D_S_UNIT)/ROUND(SUM(CYCLE_DURATION)/3600.00,2) ELSE 0 END ),2) |  |
+| 总效率(TEU/h) | 平均每小时完成的标准箱量 | ROUND((CASE WHEN ROUND(SUM(CYCLE_DURATION)/3600.00,2) > 0 THEN SUM(L_D_S_TEU)/ROUND(SUM(CYCLE_DURATION)/3600.00,2) ELSE 0 END ),2) |  |
+| 最大循环时长 (s) | 装卸船最大的循环时长 | MAX(L_D_CYCLE_DURATION)  |  |
+| 平均循环时长 (s) | 装卸船平均循环时长 | ROUND((CASE WHEN SUM(L_D_S_MOVE) >0 THEN SUM(CYCLE_DURATION)/SUM(L_D_S_MOVE) ELSE 0 END),2) |  |
+| 最小循环时长 (s) | 装卸船最小的循环时长 | MIN(L_D_CYCLE_DURATION)  |  |
+| 最大海侧安全高度以下时长 (s) | 装卸船循环中最大的海侧安全高度时长 | MAX(L_D_WS_HST_UNDER_SH_DURATION) |  |
+| 平均 海侧安全高度以下时长(s) | 装卸船循环中平均海侧安全高度时长 | ROUND((CASE WHEN SUM(L_D_WS_HST_UNDER_SH_MOVE) >0 THEN SUM(L_D_WS_HST_UNDER_SH_DURATION)/SUM(L_D_WS_HST_UNDER_SH_MOVE) ELSE 0 END),2) |  |
+| 最小海侧安全高度以下时长 (s) | 装卸船循环中最小的海侧安全高度时长 | MIN(L_D_WS_HST_UNDER_SH_DURATION)  |  |
+| 最大陆侧安全高度以下时长(s) | 装卸船循环中最大的陆侧安全高度时长 | MAX(L_D_LS_HST_UNDER_SH_DURATION) |  |
+| 平均 陆侧安全高度以下时长(s) | 装卸船循环中平均陆侧安全高度时长 | ROUND((CASE WHEN SUM(L_D_LS_HST_UNDER_SH_MOVE) >0 THEN SUM(L_D_LS_HST_UNDER_SH_DURATION)/SUM(L_D_LS_HST_UNDER_SH_MOVE) ELSE 0 END),2) |  |
+| 最小陆侧安全高度以下时长 (s) | 装卸船循环中最小的陆侧安全高度时长 | MIN(L_D_LS_HST_UNDER_SH_DURATION)  |  |
+| 装船作业量(钩) | 装船作业的循环数 | SUM(LOAD_S_MOVE)  |  |
+| 装船作业量(Unit) | 装船作业的集装箱量 | SUM(LOAD_S_UNIT)  |  |
+| 装船作业量(TEU) | 装船作业的标准箱量 | SUM(LOAD_S_TEU)  |  |
+| 装船最大循环时长(s) | 装船最大的循环时长 | MAX(LOAD_CYCLE_DURATION)  |  |
+| 装船平均循环时长(s) | 装船平均循环时长 | ROUND((CASE WHEN SUM(LOAD_S_MOVE) >0 THEN SUM(LOAD_CYCLE_DURATION)/SUM(LOAD_S_MOVE) ELSE 0 END),2) |  |
+| 装船最小循环时长(s) | 装船最小的循环时长 | MIN(LOAD_CYCLE_DURATION)  |  |
+| 装船最大海侧安全高度以下时长(s) | 装船循环中最大的海侧安全高度时长 | MAX(LOAD_WS_HST_UNDER_SH_DURATION) |  |
+| 装船平均海侧安全高度以下时长(s) | 装船循环中平均海侧安全高度时长 | ROUND((CASE WHEN SUM(LOAD_WS_HST_UNDER_SH_MOVE) >0 THEN SUM(LOAD_WS_HST_UNDER_SH_DURATION)/SUM(LOAD_WS_HST_UNDER_SH_MOVE) ELSE 0 END),2) |  |
+| 装船最小海侧安全高度以下时长 (s) | 装船循环中最小的海侧安全高度时长 | MIN(LOAD_WS_HST_UNDER_SH_DURATION)  |  |
+| 装船最大陆侧安全高度以下时长(s) | 装船循环中最大的陆侧安全高度时长 | MAX(LOAD_LS_HST_UNDER_SH_DURATION) |  |
+| 装船平均 陆侧安全高度以下时长(s) | 装船循环中平均陆侧安全高度时长 | ROUND((CASE WHEN SUM(LOAD_LS_HST_UNDER_SH_MOVE) >0 THEN SUM(LOAD_LS_HST_UNDER_SH_DURATION)/SUM(LOAD_LS_HST_UNDER_SH_MOVE) ELSE 0 END),2) |  |
+| 装船最小陆侧安全高度以下时长 (s) | 装船循环中最小的陆侧安全高度时长 | MIN(LOAD_LS_HST_UNDER_SH_DURATION)  |  |
+| 卸船作业量(钩) | 卸船作业的循环数 | SUM(DSCH_S_MOVE)  |  |
+| 卸船作业量(Unit) | 卸船作业的集装箱量 | SUM(DSCH_S_UNIT)  |  |
+| 卸船作业量(TEU) | 卸船作业的标准箱量 | SUM(DSCH_S_TEU)  |  |
+| 卸船最大循环时长(s) | 卸船最大的循环时长 | MAX(DSCH_CYCLE_DURATION)  |  |
+| 卸船平均循环时长(s) | 卸船平均循环时长 | ROUND((CASE WHEN SUM(DSCH_S_MOVE) >0 THEN SUM(DSCH_CYCLE_DURATION)/SUM(DSCH_S_MOVE) ELSE 0 END),2) |  |
+| 卸船最小循环时长(s) | 卸船最小的循环时长 | MIN(DSCH_CYCLE_DURATION)  |  |
+| 卸船最大海侧安全高度以下时长(s) | 卸船循环中最大的海侧安全高度时长 | MAX(DSCH_WS_HST_UNDER_SH_DURATION) |  |
+| 卸船平均海侧安全高度以下时长(s) | 卸船循环中平均海侧安全高度时长 | ROUND((CASE WHEN SUM(DSCH_WS_HST_UNDER_SH_MOVE) >0 THEN SUM(DSCH_WS_HST_UNDER_SH_DURATION)/SUM(DSCH_WS_HST_UNDER_SH_MOVE) ELSE 0 END),2) |  |
+| 卸船最小海侧安全高度以下时长 (s) | 卸船循环中最小的海侧安全高度时长 | MIN(DSCH_WS_HST_UNDER_SH_DURATION)  |  |
+| 卸船最大陆侧安全高度以下时长(s) | 卸船循环中最大的陆侧安全高度时长 | MAX(DSCH_LS_HST_UNDER_SH_DURATION) |  |
+| 卸船平均 陆侧安全高度以下时长(s) | 卸船循环中平均陆侧安全高度时长 | ROUND((CASE WHEN SUM(DSCH_LS_HST_UNDER_SH_MOVE) >0 THEN SUM(DSCH_LS_HST_UNDER_SH_DURATION)/SUM(DSCH_LS_HST_UNDER_SH_MOVE) ELSE 0 END),2) |  |
+| 卸船最小陆侧安全高度以下时长 (s) | 卸船循环中最小的陆侧安全高度时长 | MIN(DSCH_LS_HST_UNDER_SH_DURATION)  |  |
+
+### 四、筛选条件（WHERE）
+
+
+
+### 五、分组逻辑（GROUP BY）
+1. 分组粒度（可选）：【如“C_MONTH（月）；C_WEEK（周）；C_YEAR_MONTH_DAY（天）；QC_NAME（岸桥设备）；”】
+2. 排序规则（可选）：【按分组维度字段升序排列】
+
+### 六、返回值要求
+1. 字段格式：【“返回字段需包含分组维度字段+所有指标字段；指标字段命名规范：指标名称”】
+2. 数值格式：【“平均值保留2位小数；百分比保留2位小数；整数字段无小数位”】
+3. 空值处理：【“NULL值替换为0；分母为0时返回'无数据'”】
+4. 输出形式：【“完整可执行的SQL语句 + 指标计算逻辑解读 + 返回值示例”】
+
+请只输出Mysql数据库的 SQL，不要解释。

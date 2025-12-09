@@ -7,12 +7,14 @@ import dev.langchain4j.guardrail.InputGuardrailResult;
 import java.util.Set;
 
 /**
+ * 输入提示守卫rail在 大模型调用前，用于过滤敏感词
+ *
  * @author songqiang
  * @date 2025-12-01 10:24
  */
 public class SafeInputGuardrail implements InputGuardrail {
 
-    private static final Set<String> sensitiveWords = Set.of("kill","evil");
+    private static final Set<String> SENSITIVE_WORDS = Set.of("kill", "evil");
 
     @Override
     public InputGuardrailResult validate(UserMessage userMessage) {
@@ -22,7 +24,7 @@ public class SafeInputGuardrail implements InputGuardrail {
         String[] words = inputText.split("\\W+");
         // 遍历所有单词，检查是否存在敏感词
         for (String word : words) {
-            if (sensitiveWords.contains(word)) {
+            if (SENSITIVE_WORDS.contains(word)) {
                 return fatal("Sensitive word detected: " + word);
             }
         }

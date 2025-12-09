@@ -4,3 +4,8 @@ server:
 spring:
   profiles:
     active: local
+  datasource:
+    url: jdbc:mysql://10.128.254.157:3306/ZPMC_TBI?useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Zpmc@254.157
+    driver-class-name: com.mysql.cj.jdbc.Driver

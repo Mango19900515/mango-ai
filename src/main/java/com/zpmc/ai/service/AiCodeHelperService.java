@@ -1,11 +1,10 @@
 package com.zpmc.ai.service;
 
-import com.zpmc.ai.guardrail.SafeInputGuardrail;
+import com.zpmc.ai.report.model.ReportResult;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.Result;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import dev.langchain4j.service.guardrail.InputGuardrails;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
  * @date 2025-11-28 10:10
  */
 //输入拦截器
-@InputGuardrails({SafeInputGuardrail.class})
+//@InputGuardrails({SafeInputGuardrail.class})
 public interface AiCodeHelperService {
 
     @SystemMessage(fromResource = "system-prompt.txt")
@@ -29,7 +28,6 @@ public interface AiCodeHelperService {
     String chat(@MemoryId int memoryId, @UserMessage String userMessage);
 
 
-
     @SystemMessage(fromResource = "system-prompt.txt")
     Report chatForReport(String userMessage);
 
@@ -40,6 +38,11 @@ public interface AiCodeHelperService {
     @SystemMessage(fromResource = "system-prompt.txt")
     Result<String> chatWithRag(String userMessage);
 
+
+    @SystemMessage(value = " You are a SQL generator. \n" +
+            "            Generate ONLY executable SQL for MySQL.\n" +
+            "            Do NOT explain, only output SQL.", fromResource = "kpi-prompt.txt")
+    ReportResult queryTable(String userMessage);
 
 
 }
